@@ -138,6 +138,7 @@ module.exports = router;
  *       type: object
  *       required:
  *         - nombre
+ *         - imagen
  *       properties:
  *         nombre:
  *            type: string
@@ -148,19 +149,19 @@ module.exports = router;
  *            unique: true
  *            lowercase: true
  *            index: true
+ *         imagen:
+ *            type: string
+ *            trim: true
  *         status:
  *            type: string
  *            default: "Active"
  *            enum:
  *            - "Active"
  *            - "Inactive"
- *          imagen:
- *            type: string
- *            trim: true
  *       example:
  *         nombre: Manzana
  *         slug: frutas-verduras
  *         tipoProducto: FB
- *         imagen: /ruta
+ *         imagen: ruta
  *         status: Active      
  */

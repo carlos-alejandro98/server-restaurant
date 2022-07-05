@@ -1,20 +1,20 @@
-const TipoProducto = require("../models/tipoProducto");
+const TipoProductoModel = require("../models/tipoProducto");
 const slugify = require("slugify");
 
 // Crear Tipo de Productos
 exports.createTipoProducto = async (req, res) => {
     try {
-        const { tipoproducto } = req.body;
-        res.json(await new TipoProducto({ tipoProducto, slug: slugify(tipoproducto) }).save());
+        const { tipoProducto, identificador } = req.body;
+        res.json(await new TipoProductoModel({ tipoProducto, identificador, slug: slugify(tipoProducto) }).save());
     } catch (err) {
-        console.log(err);
+        console.log("Error Detalle: ", err);
         res.status(400).send("Ha ocurrido un error al crear el tipo de producto");
     }
 };
 
 // Obtener todos los tipos de productos
 exports.getTipoProductos = async (req, res) => {
-    let tipoproductos = await TipoProducto.find({ status: "Active" })
+    let tipoproductos = await TipoProductoModel.find({ status: "Active" })
         .exec();
     res.json(tipoproductos);
 };
@@ -22,7 +22,7 @@ exports.getTipoProductos = async (req, res) => {
 // Soft-delete
 exports.changeStatusTipoProducto = async (req, res) => {
     try {
-        const deleted = await TipoProducto.findOneAndUpdate(
+        const deleted = await TipoProductoModel.findOneAndUpdate(
             {
                 slug: req.params.slug,
             },
@@ -39,7 +39,7 @@ exports.changeStatusTipoProducto = async (req, res) => {
 // Eliminar Tipo Producto
 exports.eliminarTipoProducto = async (req, res) => {
     try {
-        const deleted = await TipoProducto.findOneAndRemove({
+        const deleted = await TipoProductoModel.findOneAndRemove({
             slug: req.params.slug,
         }).exec();
         res.json(deleted);
@@ -55,7 +55,7 @@ exports.actualizarTipoProducto = async (req, res) => {
         if (req.body.title) {
             req.body.slug = slugify(req.body.title);
         }
-        const updated = await TipoProducto.findOneAndUpdate(
+        const updated = await TipoProductoModel.findOneAndUpdate(
             { slug: req.params.slug },
             req.body,
             { new: true }
