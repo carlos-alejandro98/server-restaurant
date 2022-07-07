@@ -135,7 +135,6 @@ module.exports = router;
  * components:
  *   schemas:
  *     Producto:
- *       type: object
  *       required:
  *         - nombre
  *         - imagen
