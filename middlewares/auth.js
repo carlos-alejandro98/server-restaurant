@@ -4,11 +4,9 @@ const User = require("../models/user");
 // middlewares validation
 exports.authCheck = async (req, res, next) => {
   try {
-    let firebaseUser = await admin
-      .auth()
-      .verifyIdToken(req.headers.authtoken);
+    let firebaseUser = await admin.auth().verifyIdToken(req.headers.authtoken);
     req.user = firebaseUser;
-    console.log(firebaseUser)
+    console.log(firebaseUser);
     next();
   } catch (err) {
     res.status(401).json({
