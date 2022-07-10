@@ -1,5 +1,6 @@
 const User = require("../models/user");
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const STATUS_CODES = {
   ERROR: "ERROR",
@@ -7,29 +8,77 @@ const STATUS_CODES = {
   INVALID: "INVALID",
 };
 
+exports.loginAdmin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    let user = await User.findOne({ email });
+    if (!user) {
+      return res.json({
+        message: "El usuario no existe.",
+        CodeResult: STATUS_CODES.INVALID,
+      });
+    }
+    const successPassword = bcrypt.compareSync(password, user.password);
+
+    if (!successPassword) {
+      return res.json({
+        message: "La contraseña es incorrecta.",
+        CodeResult: STATUS_CODES.INVALID,
+      });
+    }
+    const payload = {
+      user: {
+        id: user.id,
+      },
+    };
+    jwt.sign(
+      payload,
+      process.env.SECRET_PASS,
+      {
+        expiresIn: 3600,
+      },
+      (error, token) => {
+        if (error) throw error;
+        res.status(200).json({
+          token,
+          CodeResult: STATUS_CODES.SUCCESS,
+          user,
+        });
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error al iniciar sesión.",
+      CodeResult: STATUS_CODES.ERROR,
+      errorMessage: error,
+    });
+  }
+};
+
 exports.createNewUser = async (req, res) => {
   try {
-    const { emailUser, picture, uid } = req.user;
-    const { email, displayName, role, phoneNumber, avatarUrl, password } = req.body;
+    const { email, picture } = req.user;
+    const { displayName, role, phoneNumber, avatarUrl, password } = req.body;
     const userExist = await User.findOne({ email });
-    const salt = bcrypt.genSalt(10);
-    let passwordHash = '';
 
-    if (password) {
-      passwordHash = await bcrypt.hash(password, salt);
-    }
     if (userExist) {
-      res.status(200).json({
+      return res.status(200).json({
         message: "Usuario ya existe",
         CodeResult: STATUS_CODES.INVALID,
       });
     } else {
+      const salt = await bcrypt.genSalt(10);
+      let passwordHash = '';
+      if (password) {
+        passwordHash = await bcrypt.hash(password, salt);
+      }
       const newUser = await new User({
-        email: email ? email : emailUser,
+        email: email,
         name: displayName ? displayName : email.split("@")[0],
         role: role ? role : "subscriber",
         phoneNumber: phoneNumber ? phoneNumber : "",
-        password: password ? passwordHash : '',
+        password: passwordHash,
         avatarUrl: avatarUrl ? avatarUrl : picture,
       }).save();
       res.status(200).json({

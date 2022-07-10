@@ -5,7 +5,7 @@ const router = express.Router();
 const { authCheck, adminCheck } = require("../middlewares/auth");
 
 // middlewares controller
-const { createNewUser, updateUser, currentUser, getAllUsers } = require("../controllers/auth");
+const { createNewUser, updateUser, currentUser, getAllUsers, loginAdmin } = require("../controllers/auth");
 
 // routes - endpoints
 
@@ -40,6 +40,7 @@ const { createNewUser, updateUser, currentUser, getAllUsers } = require("../cont
  *         description: Invalid or expired token
  */
 router.post("/create-user", authCheck, createNewUser);
+router.post("/login-admin", adminCheck, loginAdmin);
 router.post("/update-user", authCheck, updateUser);
 router.post("/current-user", authCheck, currentUser);
 router.post("/all-users", authCheck, getAllUsers);
