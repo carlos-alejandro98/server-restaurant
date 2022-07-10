@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const bcrypt = require("bcrypt")
 
 const STATUS_CODES = {
   ERROR: "ERROR",
@@ -9,8 +10,14 @@ const STATUS_CODES = {
 exports.createNewUser = async (req, res) => {
   try {
     const { emailUser, picture, uid } = req.user;
-    const { email, displayName, role, phoneNumber, avatarUrl, id } = req.body;
+    const { email, displayName, role, phoneNumber, avatarUrl, password } = req.body;
     const userExist = await User.findOne({ email });
+    const salt = bcrypt.genSalt(10);
+    let passwordHash = '';
+
+    if (password) {
+      passwordHash = await bcrypt.hash(password, salt);
+    }
     if (userExist) {
       res.status(200).json({
         message: "Usuario ya existe",
@@ -22,6 +29,7 @@ exports.createNewUser = async (req, res) => {
         name: displayName ? displayName : email.split("@")[0],
         role: role ? role : "subscriber",
         phoneNumber: phoneNumber ? phoneNumber : "",
+        password: password ? passwordHash : '',
         avatarUrl: avatarUrl ? avatarUrl : picture,
       }).save();
       res.status(200).json({
