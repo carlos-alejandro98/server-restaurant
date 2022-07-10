@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "Server Project Counter",
+  "description": "Server Project Restaurant",
   "main": "index.js",
   "scripts": {
     "develop": "nodemon index.js",

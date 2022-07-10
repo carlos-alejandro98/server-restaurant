@@ -38,6 +38,8 @@ exports.changeStatusTipoProducto = async (req, res) => {
 
 // Eliminar Tipo Producto
 exports.eliminarTipoProducto = async (req, res) => {
+    console.log("ELIMINANDO TIPO PRODUCTO...");
+    console.log("SLUG:" ,req.params.slug);
     try {
         const deleted = await TipoProductoModel.findOneAndRemove({
             slug: req.params.slug,

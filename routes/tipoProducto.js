@@ -78,7 +78,7 @@ router.patch("/productos/tipo-productos-delete/:slug", changeStatusTipoProducto)
  *       - name: "Tipo Productos"
  *     summary: "Eliminar Tipo Productos"
  *     parameters:
- *       - name: "tipoProducto"
+ *       - tipoProducto: "tipoProducto"
  *         in: "path"
  *         description: "tipoProducto search"
  *         required: true
@@ -100,7 +100,7 @@ router.patch("/productos/tipo-productos-delete/:slug", changeStatusTipoProducto)
  *     tags:
  *       - name: "Tipo Productos"
  *     parameters:
- *       - name: "tipoproducto"
+ *       - tipoProducto: "tipoproducto"
  *         in: "path"
  *         description: "tipoproducto search"
  *         required: true
