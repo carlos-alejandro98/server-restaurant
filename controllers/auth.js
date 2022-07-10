@@ -14,7 +14,7 @@ exports.loginAdmin = async (req, res) => {
     let user = await User.findOne({ email });
     if (!user) {
       return res.json({
-        message: "El usuario no existe.",
+        errorMessage: "El usuario no existe.",
         CodeResult: STATUS_CODES.INVALID,
       });
     }
@@ -22,7 +22,7 @@ exports.loginAdmin = async (req, res) => {
 
     if (!successPassword) {
       return res.json({
-        message: "La contraseña es incorrecta.",
+        errorMessage: "La contraseña es incorrecta.",
         CodeResult: STATUS_CODES.INVALID,
       });
     }
