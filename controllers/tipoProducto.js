@@ -3,9 +3,10 @@ const slugify = require("slugify");
 
 // Crear Tipo de Productos
 exports.createTipoProducto = async (req, res) => {
+    console.log("Body: ", req.body);
     try {
-        const { tipoProducto, identificador } = req.body;
-        res.json(await new TipoProductoModel({ tipoProducto, identificador, slug: slugify(tipoProducto) }).save());
+        const { tipoProducto, identificador, status } = req.body;
+        res.json(await new TipoProductoModel({ tipoProducto, identificador, slug: slugify(tipoProducto), status }).save());
     } catch (err) {
         console.log("Error Detalle: ", err);
         res.status(400).send("Ha ocurrido un error al crear el tipo de producto");
@@ -38,8 +39,6 @@ exports.changeStatusTipoProducto = async (req, res) => {
 
 // Eliminar Tipo Producto
 exports.eliminarTipoProducto = async (req, res) => {
-    console.log("ELIMINANDO TIPO PRODUCTO...");
-    console.log("SLUG:" ,req.params.slug);
     try {
         const deleted = await TipoProductoModel.findOneAndRemove({
             slug: req.params.slug,
