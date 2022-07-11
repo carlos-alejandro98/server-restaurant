@@ -4,8 +4,7 @@ const slugify = require("slugify");
 // Crear Producto
 exports.crearProducto = async (req, res) => {
   try {
-    console.log(req.body);
-    req.body.slug = slugify(req.body.title);
+    req.body.nombre = slugify(req.body.slug);
     const newProduct = await new Product(req.body).save();
     res.json(newProduct);
   } catch (err) {
