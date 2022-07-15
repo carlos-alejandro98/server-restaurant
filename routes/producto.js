@@ -143,6 +143,9 @@ module.exports = router;
  *            type: string
  *            trim: true
  *            maxlength: 32
+ *         precioCompra:
+ *            type: number
+ *            trim: true
  *         slug:
  *            type: string
  *            unique: true
@@ -159,8 +162,11 @@ module.exports = router;
  *            - "Inactive"
  *       example:
  *         nombre: Manzana
+ *         precioCompra: 2000
+ *         cantidadComprada: 10
+ *         cantidadStock: 9
  *         slug: frutas-verduras
- *         tipoProducto: FB
+ *         tipoProducto: 62cafa0d01f8204e84a31b7e
  *         imagen: ruta
  *         status: Active      
  */

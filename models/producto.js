@@ -10,6 +10,21 @@ const productSchema = new mongoose.Schema(
       maxlength: 32,
       text: true,
     },
+    precioCompra: {
+      type: Number,
+      trim: true,
+      required: true,
+    },
+    cantidadComprada:{
+      type: Number,
+      trim: true,
+      required: true,
+    },
+    cantidadStock:{
+      type: Number,
+      trim: true,
+      required: true,
+    },
     slug: {
       type: String,
       unique: true,
