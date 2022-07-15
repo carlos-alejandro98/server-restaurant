@@ -26,7 +26,7 @@ exports.cantidadProductos = async (req, res) => {
 
 // Obtener Productos
 exports.obtenerProductos = async (req, res) => {
-  let products = await Product.find({ status: "Active" })
+  let products = await Product.find()
     .limit(parseInt(req.params.count))
     .exec();
   res.json(products);
