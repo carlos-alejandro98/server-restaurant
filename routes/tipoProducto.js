@@ -157,9 +157,6 @@ module.exports = router;
  *         status:
  *            type: string
  *            default: "Active"
- *            enum:
- *            - "Active"
- *            - "Inactive"
  *       example:
  *         tipoProducto: Frutas y Verduras
  *         identificador: FB
