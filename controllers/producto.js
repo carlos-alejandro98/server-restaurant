@@ -1,17 +1,26 @@
 const Product = require("../models/producto");
 const slugify = require("slugify");
 
+const STATUS_CODES = {
+  ERROR: "ERROR",
+  SUCCESS: "SUCCESS",
+  INVALID: "INVALID",
+};
+
 // Crear Producto
 exports.crearProducto = async (req, res) => {
   try {
     req.body.nombre = slugify(req.body.slug);
     const newProduct = await new Product(req.body).save();
-    res.json(newProduct);
+    res.status(200).json({
+      CodeResult: STATUS_CODES.SUCCESS,
+      product: newProduct
+    })
   } catch (err) {
     // res.status(400).send("Create product failed");
-    res.status(400).json({
-      err: err.message,
-      code: err.code,
+    res.status(200).json({
+      errorMessage: err.message,
+      CodeResult: STATUS_CODES.ERROR,
     });
   }
 };
@@ -29,7 +38,10 @@ exports.obtenerProductos = async (req, res) => {
   let products = await Product.find()
     .limit(parseInt(req.params.count))
     .exec();
-  res.json(products);
+  res.status(200).json({
+    products,
+    CodeResult: STATUS_CODES.SUCCESS
+  })
 };
 
 // soft-delete

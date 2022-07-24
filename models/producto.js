@@ -3,24 +3,24 @@ const { ObjectId } = mongoose.Schema;
 
 const productSchema = new mongoose.Schema(
   {
-    nombre: {
+    name: {
       type: String,
       trim: true,
       required: true,
       maxlength: 32,
       text: true,
     },
-    precioCompra: {
+    priceShop: {
       type: Number,
       trim: true,
       required: true,
     },
-    cantidadComprada:{
+    countShop:{
       type: Number,
       trim: true,
       required: true,
     },
-    cantidadStock:{
+    countStock:{
       type: Number,
       trim: true,
       required: true,
@@ -31,11 +31,14 @@ const productSchema = new mongoose.Schema(
       lowercase: true,
       index: true,
     },
-    tipoProducto: {
+    /* typeProduct: {
       type: ObjectId,
       ref: "TipoProducto",
+    }, */
+    typeProduct: {
+      type: String
     },
-    imagen: {
+    imageUrl: {
         type: String,
         trim: true,
         required: true,
@@ -44,7 +47,7 @@ const productSchema = new mongoose.Schema(
     status: {
       type: String,
       default: "Active",
-      enum: ["Active", "Inactive"],
+      enum: ["Activo", "Inactivo"],
     },
   },
   { timestamps: true }
