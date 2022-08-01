@@ -45,13 +45,13 @@ exports.obtenerProductos = async (req, res) => {
 };
 
 // soft-delete
-exports.cambiarEstado = async (req, res) => {
+exports.cambiarEstado = async (req, res) => { 
   try {
     const deleted = await Product.findOneAndUpdate(
       {
         slug: req.params.slug,
       },
-      { status: "Inactive" },
+      { status: req.body.status === true ? false : true },
       { new: true }
     ).exec();
     res.json(deleted);

@@ -45,9 +45,8 @@ const productSchema = new mongoose.Schema(
         text: true,
     },
     status: {
-      type: String,
-      default: "Active",
-      enum: ["Activo", "Inactivo"],
+      type: Boolean,
+      default: true
     },
   },
   { timestamps: true }
