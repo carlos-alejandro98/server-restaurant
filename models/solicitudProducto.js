@@ -6,13 +6,16 @@ const solicitudProductoSchema = new mongoose.Schema(
     usuario: {
         type: ObjectId,
         ref: "User",
+        trim: true
     },
     typeProduct: {
-      type: Array
+      type: Array,
+      required: true
     },
     cantidad: {
         type: Number,
-        required: true
+        required: true,
+        trim: true
     },
     pmp:{
         type: Number,
@@ -21,7 +24,13 @@ const solicitudProductoSchema = new mongoose.Schema(
     fechaSolicitud: {
         type: Date,
         require: true
-    }
+    },
+    status: {
+        type: String,
+        default: "Solicitado",
+        trim: true,
+        enum: ["Solicitado", "Pendiente", "Entregado"],
+    },
   },
   { timestamps: true }
 );
