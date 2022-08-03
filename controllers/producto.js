@@ -10,7 +10,7 @@ const STATUS_CODES = {
 // Crear Producto
 exports.crearProducto = async (req, res) => {
   try {
-    req.body.nombre = slugify(req.body.slug);
+    req.body.name = slugify(req.body.slug);
     const newProduct = await new Product(req.body).save();
     res.status(200).json({
       CodeResult: STATUS_CODES.SUCCESS,
@@ -67,10 +67,16 @@ exports.eliminarProducto = async (req, res) => {
     const deleted = await Product.findOneAndRemove({
       slug: req.params.slug,
     }).exec();
-    res.json(deleted);
+    res.status(200).json({
+      CodeResult: STATUS_CODES.SUCCESS,
+      deleted
+    })
   } catch (err) {
     console.log(err);
-    return res.status(400).send("Error al eliminar producto");
+    return res.status(400).json({
+      errorMessage: "Error al eliminar producto",
+      CodeResult: STATUS_CODES.ERROR
+    });
   }
 };
 
@@ -85,12 +91,16 @@ exports.actualizarProducto = async (req, res) => {
       req.body,
       { new: true }
     ).exec();
-    res.json(updated);
+    res.status(200).json({
+      CodeResult: STATUS_CODES.SUCCESS,
+      updated
+    });
   } catch (err) {
     console.log("Error al actualizar el producto: ", err);
     // return res.status(400).send("Product update failed");
     res.status(400).json({
-      err: err.message,
+      errorMessage: "Error al actualizar el producto",
+      CodeResult: STATUS_CODES.ERROR
     });
   }
 };
