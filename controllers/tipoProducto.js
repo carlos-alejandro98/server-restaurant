@@ -15,7 +15,7 @@ exports.createTipoProducto = async (req, res) => {
 
 // Obtener todos los tipos de productos
 exports.getTipoProductos = async (req, res) => {
-    let tipoproductos = await TipoProductoModel.find({ status: "Active" })
+    let tipoproductos = await TipoProductoModel.find()
         .exec();
     res.json(tipoproductos);
 };
