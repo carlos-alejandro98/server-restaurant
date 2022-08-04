@@ -1,12 +1,11 @@
 const mongoose = require("mongoose");
-const { ObjectId } = mongoose.Schema;
 
 const solicitudProductoSchema = new mongoose.Schema(
   {
     usuario: {
-        type: ObjectId,
-        ref: "User",
-        trim: true
+        type: String,
+        trim: true,
+        require: true
     },
     typeProduct: {
       type: Array,

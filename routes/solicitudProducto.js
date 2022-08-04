@@ -6,7 +6,7 @@ const { authCheck, adminCheck } = require("../middlewares/auth");
 
 
 // controller middlewares
-const { solicitarProducto } = require("../controllers/solicitudProducto");
+const { solicitarProducto, obtenerSolicitudes } = require("../controllers/solicitudProducto");
 
 
 /**
@@ -35,6 +35,20 @@ const { solicitarProducto } = require("../controllers/solicitudProducto");
  router.post("/solicitar-producto/crear-solicitud", solicitarProducto);
 
 
+ /**
+ * @swagger
+ * /solicitar-producto/solicitudes:
+ *   get:
+ *     tags:
+ *       - name: "SolicitudProducto"
+ *     summary: "Obtener todas las solicitudes"
+ *     responses:
+ *       200: 
+ *          description: ok   
+ */
+  router.get("/solicitar-producto/solicitudes", obtenerSolicitudes);
+
+
  module.exports = router;
 
 
@@ -47,6 +61,7 @@ const { solicitarProducto } = require("../controllers/solicitudProducto");
  *     SolicitudProducto:
  *       type: object
  *       required:
+ *         - usuario
  *         - typeProduct
  *         - cantidad
  *         - pmp
@@ -67,7 +82,7 @@ const { solicitarProducto } = require("../controllers/solicitudProducto");
  *            - "Pendiente"
  *            - "Entregado"
  *       example:
- *         usuario: idUsuario
+ *         usuario: usuario
  *         typeProduct: [1,2,3,4]
  *         cantidad: 4
  *         pmp: 4000

@@ -6,7 +6,7 @@ const STATUS_CODES = {
   INVALID: "INVALID",
 };
 
-// Crear Producto
+// Crear Solicitudes
 exports.solicitarProducto = async (req, res) => {
   try {
     const newSolicitudProducto = await new Solicitud(req.body).save();
@@ -23,16 +23,12 @@ exports.solicitarProducto = async (req, res) => {
 };
 
 
-// Obtener Productos
-/* exports.obtenerProductos = async (req, res) => {
-  let products = await Product.find()
-    .limit(parseInt(req.params.count))
-    .exec();
-  res.status(200).json({
-    products,
-    CodeResult: STATUS_CODES.SUCCESS
-  })
-}; */
+// Obtener todos los tipos de productos
+exports.obtenerSolicitudes = async (req, res) => {
+  let solicitudes = await Solicitud.find()
+      .exec();
+  res.json(solicitudes);
+};
 
 
 
