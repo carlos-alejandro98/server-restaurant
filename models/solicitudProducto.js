@@ -7,7 +7,7 @@ const solicitudProductoSchema = new mongoose.Schema(
         trim: true,
         require: true
     },
-    typeProduct: {
+    productos: {
       type: Array,
       required: true
     },
