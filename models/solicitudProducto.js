@@ -7,9 +7,10 @@ const solicitudProductoSchema = new mongoose.Schema(
         trim: true,
         require: true
     },
-    productos: {
-      type: Array,
-      required: true
+    producto: {
+      type: String,
+      required: true,
+      trim: true
     },
     cantidad: {
         type: Number,

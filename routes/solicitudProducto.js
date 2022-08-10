@@ -62,7 +62,7 @@ const { solicitarProducto, obtenerSolicitudes } = require("../controllers/solici
  *       type: object
  *       required:
  *         - usuario
- *         - typeProduct
+ *         - producto
  *         - cantidad
  *         - pmp
  *         - fechaSolicitud
@@ -70,8 +70,9 @@ const { solicitarProducto, obtenerSolicitudes } = require("../controllers/solici
  *         usuario:
  *            type: string
  *            trim: true
- *         typeProduct:
- *            type: Array
+ *         producto:
+ *            type: string
+ *            trim: true
  *         cantidad:
  *            type: number
  *         status:
@@ -83,7 +84,7 @@ const { solicitarProducto, obtenerSolicitudes } = require("../controllers/solici
  *            - "Entregado"
  *       example:
  *         usuario: usuario
- *         typeProduct: [1,2,3,4]
+ *         producto: Manzana
  *         cantidad: 4
  *         pmp: 4000
  *         fechaSolicitud: 09/10/2022
