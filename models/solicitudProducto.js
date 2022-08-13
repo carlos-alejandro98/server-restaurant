@@ -8,9 +8,8 @@ const solicitudProductoSchema = new mongoose.Schema(
         require: true
     },
     producto: {
-      type: String,
-      required: true,
-      trim: true
+      type: Array,
+      required: true
     },
     cantidad: {
         type: Number,

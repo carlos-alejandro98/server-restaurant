@@ -71,7 +71,7 @@ const { solicitarProducto, obtenerSolicitudes } = require("../controllers/solici
  *            type: string
  *            trim: true
  *         producto:
- *            type: string
+ *            type: array
  *            trim: true
  *         cantidad:
  *            type: number
@@ -84,7 +84,7 @@ const { solicitarProducto, obtenerSolicitudes } = require("../controllers/solici
  *            - "Entregado"
  *       example:
  *         usuario: usuario
- *         producto: Manzana
+ *         producto: [{"producto": "manzana", "cantidad": 2},{"producto": "pera", "cantidad": 5}]
  *         cantidad: 4
  *         pmp: 4000
  *         fechaSolicitud: 09/10/2022
