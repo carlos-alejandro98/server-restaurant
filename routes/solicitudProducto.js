@@ -6,7 +6,7 @@ const { authCheck, adminCheck } = require("../middlewares/auth");
 
 
 // controller middlewares
-const { solicitarProducto, obtenerSolicitudes } = require("../controllers/solicitudProducto");
+const { solicitarProducto, obtenerSolicitudes, cambiarEstado } = require("../controllers/solicitudProducto");
 
 
 /**
@@ -47,6 +47,38 @@ const { solicitarProducto, obtenerSolicitudes } = require("../controllers/solici
  *          description: ok   
  */
   router.get("/solicitar-producto/solicitudes", obtenerSolicitudes);
+
+
+
+
+
+/**
+ * @swagger
+ * /solicitar-producto/cambiarEstado/{producto}:
+ *   patch:
+ *     tags:
+ *       - name: "SolicitudProducto"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/SolicitudProducto"
+ *     summary: "Cambiar estado de las solicitudes"
+ *     parameters:
+ *       - name: "producto"
+ *         in: "path"
+ *         description: "producto search"
+ *         required: true
+ *         type: "string"
+ *         trim: true
+ *         text: true
+ *     responses:
+ *       200: 
+ *          description: ok   
+ */
+router.patch("/solicitar-producto/cambiarEstado/:producto", cambiarEstado); // soft-delete
+
 
 
  module.exports = router;
