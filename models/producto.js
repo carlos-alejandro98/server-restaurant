@@ -33,15 +33,15 @@ const productSchema = new mongoose.Schema(
     },
     /* typeProduct: {
       type: ObjectId,
-      ref: "TipoProducto",
+      
     }, */
     typeProduct: {
-      type: String
+      type: String,
+      ref: "TipoProducto",
     },
     imageUrl: {
         type: String,
         trim: true,
-        required: true,
         text: true,
     },
     status: {
