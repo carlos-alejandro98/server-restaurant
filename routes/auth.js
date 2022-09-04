@@ -43,7 +43,7 @@ router.post("/create-user", authCheck, createNewUser);
 router.post("/login-admin", adminCheck, loginAdmin);
 router.post("/update-user", authCheck, updateUser);
 router.post("/current-user", authCheck, currentUser);
-router.post("/all-users", authCheck, getAllUsers);
+router.post("/all-users", getAllUsers);
 router.post("/current-admin", authCheck, adminCheck, currentUser);
 
 module.exports = router;
