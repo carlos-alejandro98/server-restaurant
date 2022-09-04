@@ -14,8 +14,8 @@ exports.crearProducto = async (req, res) => {
     const newProduct = await new Product(req.body).save();
     res.status(200).json({
       CodeResult: STATUS_CODES.SUCCESS,
-      product: newProduct
-    })
+      product: newProduct,
+    });
   } catch (err) {
     // res.status(400).send("Create product failed");
     res.status(200).json({
@@ -35,13 +35,27 @@ exports.cantidadProductos = async (req, res) => {
 
 // Obtener Productos
 exports.obtenerProductos = async (req, res) => {
-  let products = await Product.find()
-    .limit(parseInt(req.params.count))
-    .exec();
+  let products = await Product.find().limit(parseInt(req.params.count)).exec();
   res.status(200).json({
     products,
-    CodeResult: STATUS_CODES.SUCCESS
-  })
+    CodeResult: STATUS_CODES.SUCCESS,
+  });
+};
+
+exports.obtenerProductosName = async (req, res) => {
+  const { name } = req.body;
+  const product = await Product.find({ name });
+  if (product.length > 0) {
+    res.status(200).json({
+      product,
+      CodeResult: STATUS_CODES.SUCCESS,
+    });
+  } else {
+    res.status(200).json({
+      errorMessage: "No existe producto.",
+      CodeResult: STATUS_CODES.INVALID,
+    });
+  }
 };
 
 // soft-delete
@@ -69,13 +83,13 @@ exports.eliminarProducto = async (req, res) => {
     }).exec();
     res.status(200).json({
       CodeResult: STATUS_CODES.SUCCESS,
-      deleted
-    })
+      deleted,
+    });
   } catch (err) {
     console.log(err);
     return res.status(400).json({
       errorMessage: "Error al eliminar producto",
-      CodeResult: STATUS_CODES.ERROR
+      CodeResult: STATUS_CODES.ERROR,
     });
   }
 };
@@ -93,14 +107,14 @@ exports.actualizarProducto = async (req, res) => {
     ).exec();
     res.status(200).json({
       CodeResult: STATUS_CODES.SUCCESS,
-      updated
+      updated,
     });
   } catch (err) {
     console.log("Error al actualizar el producto: ", err);
     // return res.status(400).send("Product update failed");
     res.status(400).json({
       errorMessage: "Error al actualizar el producto",
-      CodeResult: STATUS_CODES.ERROR
+      CodeResult: STATUS_CODES.ERROR,
     });
   }
 };

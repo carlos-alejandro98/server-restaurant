@@ -5,7 +5,15 @@ const router = express.Router();
 const { authCheck, adminCheck } = require("../middlewares/auth");
 
 // controller middlewares
-const { obtenerProductos, crearProducto, cantidadProductos, actualizarProducto, cambiarEstado, eliminarProducto } = require("../controllers/producto");
+const {
+  obtenerProductos,
+  crearProducto,
+  cantidadProductos,
+  actualizarProducto,
+  cambiarEstado,
+  eliminarProducto,
+  obtenerProductosName,
+} = require("../controllers/producto");
 
 // routes-endpoints
 
@@ -19,10 +27,12 @@ const { obtenerProductos, crearProducto, cantidadProductos, actualizarProducto, 
  *       - name: "Productos"
  *     summary: "Obtener todos los productos"
  *     responses:
- *       200: 
- *          description: ok   
+ *       200:
+ *          description: ok
  */
- router.get("/productos/obtener-productos", obtenerProductos);
+router.get("/productos/obtener-productos", obtenerProductos);
+
+router.get("/productos/obtener-productos-name", obtenerProductosName);
 
 /**
  * @swagger
@@ -38,14 +48,14 @@ const { obtenerProductos, crearProducto, cantidadProductos, actualizarProducto, 
  *           schema:
  *             $ref: "#/components/schemas/Producto"
  *     responses:
- *       200: 
+ *       200:
  *         description: ok
  *         content:
  *           application/json:
  *             schema:
  *               $ref: "#/components/schemas/Producto"
  *       400:
- *         description: bad request     
+ *         description: bad request
  */
 router.post("/productos/create-producto", crearProducto);
 
@@ -65,8 +75,8 @@ router.post("/productos/create-producto", crearProducto);
  *         trim: true
  *         text: true
  *     responses:
- *       200: 
- *          description: ok   
+ *       200:
+ *          description: ok
  */
 router.patch("/productos/producto-delete/:slug", cambiarEstado); // soft-delete
 
@@ -86,11 +96,10 @@ router.patch("/productos/producto-delete/:slug", cambiarEstado); // soft-delete
  *         trim: true
  *         text: true
  *     responses:
- *       200: 
- *          description: ok   
+ *       200:
+ *          description: ok
  */
- router.delete("/productos/remove-producto/:slug", eliminarProducto); 
-
+router.delete("/productos/remove-producto/:slug", eliminarProducto);
 
 /**
  * @swagger
@@ -114,17 +123,16 @@ router.patch("/productos/producto-delete/:slug", cambiarEstado); // soft-delete
  *           schema:
  *             $ref: "#/components/schemas/Producto"
  *     responses:
- *       200: 
+ *       200:
  *         description: ok
  *         content:
  *           application/json:
  *             schema:
  *               $ref: "#/components/schemas/Producto"
  *       400:
- *         description: bad request     
+ *         description: bad request
  */
 router.put("/productos/producto-update/:slug", actualizarProducto);
-
 
 module.exports = router;
 
@@ -168,5 +176,5 @@ module.exports = router;
  *         slug: frutas-verduras
  *         tipoProducto: 62cafa0d01f8204e84a31b7e
  *         imagen: ruta
- *         status: Active      
+ *         status: Active
  */
