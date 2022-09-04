@@ -6,7 +6,7 @@ const STATUS_CODES = {
   INVALID: "INVALID",
 };
 
-// Crear Producto
+// Crear Solicitudes
 exports.solicitarProducto = async (req, res) => {
   try {
     const newSolicitudProducto = await new Solicitud(req.body).save();
@@ -23,16 +23,60 @@ exports.solicitarProducto = async (req, res) => {
 };
 
 
-// Obtener Productos
-/* exports.obtenerProductos = async (req, res) => {
-  let products = await Product.find()
-    .limit(parseInt(req.params.count))
-    .exec();
-  res.status(200).json({
-    products,
-    CodeResult: STATUS_CODES.SUCCESS
-  })
+// Obtener todos los tipos de productos
+exports.obtenerSolicitudes = async (req, res) => {
+  let solicitudes = await Solicitud.find()
+      .exec();
+  res.json(solicitudes);
+};
+
+
+
+//cambiar estados
+/* exports.cambiarEstado = async (req, res) => {
+  try {
+    const updated = await Solicitud.findOneAndUpdate(
+      { producto: req.params.slug },
+      req.body,
+      { new: true }
+    ).exec();
+    res.status(200).json({
+      CodeResult: STATUS_CODES.SUCCESS,
+      updated
+    });
+  } catch (err) {
+    console.log("Error al actualizar el producto: ", err);
+    // return res.status(400).send("Product update failed");
+    res.status(400).json({
+      errorMessage: "Error al actualizar el producto",
+      CodeResult: STATUS_CODES.ERROR
+    });
+  }
 }; */
 
+
+exports.cambiarEstado = async (req, res) => {
+  console.log("Estatus: ", req.body.status);
+  const estado = req.body.status;
+  console.log("Parametro: ", req.params.producto);
+  try {
+    const updated = await Solicitud.findOneAndUpdate(
+      { _id: req.params.producto },
+      { status: estado === "Solicitado" ?  "Pendiente" : "Entregado"},
+      { new: true }
+    ).exec();
+    res.status(200).json({
+      CodeResult: STATUS_CODES.SUCCESS,
+      updated
+    });
+  } catch (err) {
+    console.log("Error al actualizar el producto: ", err);
+    // return res.status(400).send("Product update failed");
+    res.status(400).json({
+      errorMessage: "Error al actualizar el producto",
+      CodeResult: STATUS_CODES.ERROR
+    });
+  }
+};
 
 
