@@ -2,16 +2,16 @@ const mongoose = require("mongoose");
 
 const solicitudProductoSchema = new mongoose.Schema(
   {
-    usuario: {
+    user: {
         type: String,
         trim: true,
         require: true
     },
-    producto: {
-      type: Array,
+    product: {
+      type: String,
       required: true
     },
-    cantidad: {
+    count: {
         type: Number,
         required: true,
         trim: true
@@ -20,9 +20,14 @@ const solicitudProductoSchema = new mongoose.Schema(
         type: Number,
         required: true
     },
-    fechaSolicitud: {
+    dateRequest: {
         type: Date,
         require: true
+    },
+    imageUrl: {
+      type: String,
+      trim: true,
+      require: true
     },
     status: {
         type: String,
