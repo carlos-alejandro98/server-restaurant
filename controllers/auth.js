@@ -58,9 +58,9 @@ exports.loginAdmin = async (req, res) => {
 };
 
 exports.createNewUser = async (req, res) => {
+  console.log(req.body);
   try {
-    const { email, picture } = req.user;
-    const { displayName, role, phoneNumber, avatarUrl, password } = req.body;
+    const { name, role, phoneNumber, avatarUrl, password, email } = req.body;
     const userExist = await User.findOne({ email });
 
     if (userExist) {
@@ -76,11 +76,11 @@ exports.createNewUser = async (req, res) => {
       }
       const newUser = await new User({
         email: email,
-        name: displayName ? displayName : email.split("@")[0],
+        name: name ? name : email.split("@")[0],
         role: role ? role : "subscriber",
         phoneNumber: phoneNumber ? phoneNumber : "",
         password: passwordHash,
-        avatarUrl: avatarUrl ? avatarUrl : picture,
+        avatarUrl: avatarUrl ? avatarUrl : "",
       }).save();
       res.status(200).json({
         message: "Usuario creado correctamente",

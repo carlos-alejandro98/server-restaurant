@@ -39,8 +39,8 @@ const { createNewUser, updateUser, currentUser, getAllUsers, loginAdmin } = requ
  *      "401":
  *         description: Invalid or expired token
  */
-router.post("/create-user", authCheck, createNewUser);
-router.post("/login-admin", adminCheck, loginAdmin);
+router.post("/create-user", createNewUser);
+router.post("/login-admin", loginAdmin);
 router.post("/update-user", authCheck, updateUser);
 router.post("/current-user", authCheck, currentUser);
 router.post("/all-users", getAllUsers);

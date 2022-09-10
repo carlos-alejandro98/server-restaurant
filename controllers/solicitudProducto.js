@@ -1,3 +1,4 @@
+const Producto = require("../models/producto");
 const Solicitud = require("../models/solicitudProducto");
 
 const STATUS_CODES = {
@@ -9,11 +10,25 @@ const STATUS_CODES = {
 // Crear Solicitudes
 exports.solicitarProducto = async (req, res) => {
   try {
-    const newSolicitudProducto = await new Solicitud(req.body).save();
-    res.status(200).json({
-      CodeResult: STATUS_CODES.SUCCESS,
-      solicitudProduct: newSolicitudProducto
-    })
+    const { product, count } = req.body
+    const products = await Producto.find({ slug: product })
+    if (products.length > 0) {
+      let firstProduct = products[0]
+      if (firstProduct.countStock >= 0) {
+        firstProduct.countStock = firstProduct.countStock - count
+        await new Producto(firstProduct).save();
+        const newSolicitudProducto = await new Solicitud(req.body).save();
+        res.status(200).json({
+          CodeResult: STATUS_CODES.SUCCESS,
+          solicitudProduct: newSolicitudProducto
+        })
+      } else {
+        res.status(200).json({
+          CodeResult: STATUS_CODES.INVALID,
+          errorMessage: `No existe Stock disponible para el producto ${product}`
+        })
+      }
+    }
   } catch (err) {
     res.status(200).json({
       errorMessage: err.message,
@@ -27,7 +42,10 @@ exports.solicitarProducto = async (req, res) => {
 exports.obtenerSolicitudes = async (req, res) => {
   let solicitudes = await Solicitud.find()
       .exec();
-  res.json(solicitudes);
+  res.status(200).json({
+    CodeResult: STATUS_CODES.SUCCESS,
+    solicitudes
+  });
 };
 
 
