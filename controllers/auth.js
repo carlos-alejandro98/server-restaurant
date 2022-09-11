@@ -178,3 +178,21 @@ exports.getAllUsers = async (_, res) => {
     });
   }
 };
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const deleted = await User.findOneAndRemove({
+      _id: req.params.id,
+    }).exec();
+    res.status(200).json({
+      CodeResult: STATUS_CODES.SUCCESS,
+      deleted,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({
+      errorMessage: "Error al eliminar el usuario",
+      CodeResult: STATUS_CODES.ERROR,
+    });
+  }
+};
