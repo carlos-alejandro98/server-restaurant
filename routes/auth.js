@@ -5,7 +5,7 @@ const router = express.Router();
 const { authCheck, adminCheck } = require("../middlewares/auth");
 
 // middlewares controller
-const { createNewUser, updateUser, currentUser, getAllUsers, loginAdmin } = require("../controllers/auth");
+const { createNewUser, updateUser, currentUser, getAllUsers, loginAdmin, deleteUser } = require("../controllers/auth");
 
 // routes - endpoints
 
@@ -44,6 +44,7 @@ router.post("/login-admin", loginAdmin);
 router.post("/update-user", authCheck, updateUser);
 router.post("/current-user", authCheck, currentUser);
 router.post("/all-users", getAllUsers);
+router.delete("/delete-user/:id", deleteUser);
 router.post("/current-admin", authCheck, adminCheck, currentUser);
 
 module.exports = router;
