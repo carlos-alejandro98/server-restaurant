@@ -41,11 +41,12 @@ const { createNewUser, updateUser, currentUser, getAllUsers, loginAdmin, deleteU
  */
 router.post("/create-user", createNewUser);
 router.post("/login-admin", loginAdmin);
-router.post("/update-user", authCheck, updateUser);
 router.post("/current-user", authCheck, currentUser);
 router.post("/all-users", getAllUsers);
-router.delete("/delete-user/:id", deleteUser);
 router.post("/current-admin", authCheck, adminCheck, currentUser);
+router.delete("/delete-user/:id", deleteUser);
+router.post("/update-user/:id", updateUser);
+
 
 module.exports = router;
 
