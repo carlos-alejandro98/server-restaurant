@@ -11,10 +11,10 @@ const STATUS_CODES = {
 exports.solicitarProducto = async (req, res) => {
   try {
     const { product, count } = req.body
-    const products = await Producto.find({ slug: product })
+    const products = await Producto.find({ name: product })
     if (products.length > 0) {
       let firstProduct = products[0]
-      if (firstProduct.countStock >= 0) {
+      if (firstProduct.countStock > 0) {
         firstProduct.countStock = firstProduct.countStock - count
         await new Producto(firstProduct).save();
         const newSolicitudProducto = await new Solicitud(req.body).save();
@@ -28,6 +28,11 @@ exports.solicitarProducto = async (req, res) => {
           errorMessage: `No existe Stock disponible para el producto ${product}`
         })
       }
+    } else {
+      res.status(200).json({
+        CodeResult: STATUS_CODES.INVALID,
+        errorMessage: "No se encontraron productos"
+      })
     }
   } catch (err) {
     res.status(200).json({
@@ -74,9 +79,7 @@ exports.obtenerSolicitudes = async (req, res) => {
 
 
 exports.cambiarEstado = async (req, res) => {
-  console.log("Estatus: ", req.body.status);
   const estado = req.body.status;
-  console.log("Parametro: ", req.params.producto);
   try {
     const updated = await Solicitud.findOneAndUpdate(
       { _id: req.params.producto },
@@ -97,4 +100,32 @@ exports.cambiarEstado = async (req, res) => {
   }
 };
 
+
+exports.deleteRequestProduct = async (req, res) => {
+try {
+  const { id, count, name } = req.body
+  const request = await Solicitud.find({ _id: id })
+  if (request.length > 0) {
+    const products = await Producto.find({ name })
+    let firstProduct = products[0]
+    firstProduct.countStock = firstProduct.countStock + count
+    await new Producto(firstProduct).save();
+    await Solicitud.deleteOne({ _id: id })
+    res.status(200).json({
+      CodeResult: STATUS_CODES.SUCCESS,
+      message: "Solicitud eliminada correctamente"
+    })
+  } else {
+    res.status(200).json({
+      errorMessage: "Hubo un error al eliminar solicitud de producto",
+      CodeResult: STATUS_CODES.INVALID,
+    });
+  }
+} catch (error) {
+  res.status(500).json({
+    errorMessage: error.message,
+    CodeResult: STATUS_CODES.ERROR,
+  });
+}
+}
 
