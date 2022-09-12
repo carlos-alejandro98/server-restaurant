@@ -58,9 +58,8 @@ exports.loginAdmin = async (req, res) => {
 };
 
 exports.createNewUser = async (req, res) => {
-  console.log(req.body);
   try {
-    const { name, role, phoneNumber, avatarUrl, password, email } = req.body;
+    const { name, role, phoneNumber, avatarUrl, password, email, status } = req.body;
     const userExist = await User.findOne({ email });
 
     if (userExist) {
@@ -81,6 +80,7 @@ exports.createNewUser = async (req, res) => {
         phoneNumber: phoneNumber ? phoneNumber : "",
         password: passwordHash,
         avatarUrl: avatarUrl ? avatarUrl : "",
+        status: status ? status : true
       }).save();
       res.status(200).json({
         message: "Usuario creado correctamente",
@@ -97,34 +97,24 @@ exports.createNewUser = async (req, res) => {
   }
 };
 
+
+// Actualizar Producto
 exports.updateUser = async (req, res) => {
   try {
-    const { email, name, role } = req.user;
-    const { nameBody, emailBody, roleBody } = req.body;
-    const userExist = await User.findOne({ email });
-    if (!userExist) {
-      res.status(200).json({
-        message: "Usuario no existe",
-        CodeResult: STATUS_CODES.INVALID,
-      });
-    }
-    const user = await User.findOneAndUpdate({
-      ...req.user,
-      name: nameBody ? nameBody : name,
-      email: emailBody ? emailBody : email,
-      role: roleBody ? roleBody : role,
-    });
-    res.json({
-      message: "Usuario modificado correctamente",
-      user,
+    const updated = await User.findOneAndUpdate(
+      { _id: req.params.id },
+      req.body,
+      { new: true }
+    ).exec();
+    res.status(200).json({
       CodeResult: STATUS_CODES.SUCCESS,
+      updated,
     });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Hubo un error al modificar usuario",
+  } catch (err) {
+    console.log("Error al actualizar el usuario: ", err);
+    res.status(400).json({
+      errorMessage: "Error al actualizar el usuario",
       CodeResult: STATUS_CODES.ERROR,
-      errorMessage: error,
     });
   }
 };
