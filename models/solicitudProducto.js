@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const solicitudProductoSchema = new mongoose.Schema(
   {
+    idProduct: {
+      type: String,
+      ref: "Producto",
+    },
     user: {
         type: String,
         trim: true,

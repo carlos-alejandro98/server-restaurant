@@ -6,7 +6,7 @@ const { authCheck, adminCheck } = require("../middlewares/auth");
 
 
 // controller middlewares
-const { solicitarProducto, obtenerSolicitudes, cambiarEstado } = require("../controllers/solicitudProducto");
+const { solicitarProducto, obtenerSolicitudes, cambiarEstado, deleteRequestProduct } = require("../controllers/solicitudProducto");
 
 
 /**
@@ -78,6 +78,8 @@ const { solicitarProducto, obtenerSolicitudes, cambiarEstado } = require("../con
  *          description: ok   
  */
 router.patch("/solicitar-producto/cambiarEstado/:producto", cambiarEstado); // soft-delete
+
+router.delete("/solicitar-producto/eliminarProducto", deleteRequestProduct)
 
 
 

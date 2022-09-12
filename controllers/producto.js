@@ -10,7 +10,7 @@ const STATUS_CODES = {
 // Crear Producto
 exports.crearProducto = async (req, res) => {
   try {
-    req.body.name = slugify(req.body.slug);
+    // req.body.name = slugify(req.body.slug);
     const newProduct = await new Product(req.body).save();
     res.status(200).json({
       CodeResult: STATUS_CODES.SUCCESS,
