@@ -97,6 +97,12 @@ exports.eliminarProducto = async (req, res) => {
 // Actualizar Producto
 exports.actualizarProducto = async (req, res) => {
   try {
+    const status = req.body.status;
+    if (status === "Activo") {
+      req.body.status = true
+    } else {
+      req.body.status = false
+    }
     if (req.body.title) {
       req.body.slug = slugify(req.body.title);
     }
