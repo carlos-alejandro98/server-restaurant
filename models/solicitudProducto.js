@@ -2,36 +2,22 @@ const mongoose = require("mongoose");
 
 const solicitudProductoSchema = new mongoose.Schema(
   {
-    idProduct: {
-      type: String,
-      ref: "Producto",
-    },
-    user: {
+    usuario: {
         type: String,
         trim: true,
         require: true
     },
-    product: {
-      type: String,
+    producto: {
+      type: Array,
       required: true
-    },
-    count: {
-        type: Number,
-        required: true,
-        trim: true
     },
     pmp:{
         type: Number,
         required: true
     },
-    dateRequest: {
+    fechaSolicitud: {
         type: Date,
         require: true
-    },
-    imageUrl: {
-      type: String,
-      trim: true,
-      require: true
     },
     status: {
         type: String,

@@ -7,8 +7,8 @@ const STATUS_CODES = {
   INVALID: "INVALID",
 };
 
-// Crear Solicitudes
-exports.solicitarProducto = async (req, res) => {
+// Crear Solicitudes Old
+/* exports.solicitarProductoold = async (req, res) => {
   try {
     const { product, count } = req.body
     const products = await Producto.find({ name: product })
@@ -34,6 +34,24 @@ exports.solicitarProducto = async (req, res) => {
         errorMessage: "No se encontraron productos"
       })
     }
+  } catch (err) {
+    res.status(200).json({
+      errorMessage: err.message,
+      CodeResult: STATUS_CODES.ERROR,
+    });
+  }
+}; */
+
+// Crear solicitud
+
+exports.solicitarProducto = async (req, res) => {
+  console.log(req.body);
+  try {
+    const newSolicitudProducto = await new Solicitud(req.body).save();
+    res.status(200).json({
+      CodeResult: STATUS_CODES.SUCCESS,
+      solicitudProduct: newSolicitudProducto
+    })
   } catch (err) {
     res.status(200).json({
       errorMessage: err.message,
