@@ -14,20 +14,7 @@ const STATUS_CODES = {
     const products = await Producto.find({ name: product })
     if (products.length > 0) {
       let firstProduct = products[0]
-      if (firstProduct.countStock > 0) {
-        firstProduct.countStock = firstProduct.countStock - count
-        await new Producto(firstProduct).save();
-        const newSolicitudProducto = await new Solicitud(req.body).save();
-        res.status(200).json({
-          CodeResult: STATUS_CODES.SUCCESS,
-          solicitudProduct: newSolicitudProducto
-        })
-      } else {
-        res.status(200).json({
-          CodeResult: STATUS_CODES.INVALID,
-          errorMessage: `No existe Stock disponible para el producto ${product}`
-        })
-      }
+      
     } else {
       res.status(200).json({
         CodeResult: STATUS_CODES.INVALID,
@@ -43,14 +30,33 @@ const STATUS_CODES = {
 }; */
 
 // Crear solicitud
-
 exports.solicitarProducto = async (req, res) => {
-  console.log(req.body);
   try {
-    const newSolicitudProducto = await new Solicitud(req.body).save();
-    res.status(200).json({
-      CodeResult: STATUS_CODES.SUCCESS,
-      solicitudProduct: newSolicitudProducto
+    const { producto } = req.body
+    producto.map(async prod => {
+      const products = await Producto.find({ name: prod.product })
+      if (products.length > 0) {
+        let firstProduct = products[0]
+        if (firstProduct.countStock > 0) {
+          firstProduct.countStock = firstProduct.countStock - prod.count
+          await new Producto(firstProduct).save();
+          const newSolicitudProducto = await new Solicitud(req.body).save();
+          res.status(200).json({
+            CodeResult: STATUS_CODES.SUCCESS,
+            solicitudProduct: newSolicitudProducto
+          })
+        } else {
+          res.status(200).json({
+            CodeResult: STATUS_CODES.INVALID,
+            errorMessage: `No existe Stock disponible para el producto ${product}`
+          })
+        }
+      } else {
+      res.status(200).json({
+        CodeResult: STATUS_CODES.INVALID,
+        errorMessage: "No se encontraron productos"
+      })
+    }
     })
   } catch (err) {
     res.status(200).json({
