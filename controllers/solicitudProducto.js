@@ -11,36 +11,42 @@ const STATUS_CODES = {
 exports.solicitarProducto = async (req, res) => {
   try {
     const { producto } = req.body;
-    const isProduct = producto.map(async (prod) => {
+    const isProduct = await producto.map(async (prod) => {
       const products = await Producto.find({ name: prod.product });
       if (products.length > 0) {
         let firstProduct = products[0];
-        if (firstProduct.countStock > 0) {
+        if (firstProduct.countStock > 0 && firstProduct.countStock >= prod.count) {
           firstProduct.countStock = firstProduct.countStock - prod.count;
           await new Producto(firstProduct).save();
-          return true;
+          return ({ isProduct: true, noProducts: false, noStock: false, product: prod.product })
         } else {
+          return ({ isProduct: false, noProducts: false, noStock: true, product: prod.product })
+        }
+      } else {
+        return ({ isProduct: false, noProducts: true, noStock: false, product: prod.product })
+      } 
+    });
+    isProduct.map(elem => {
+      elem.then(val => {
+        const { isProduct, noProducts, noStock, product } = val
+        if (isProduct) {
+          res.status(200).json({
+            CodeResult: STATUS_CODES.SUCCESS,
+            message: `Producto ${product} solicitado correctamente`,
+          });
+        } else if(noProducts) {
+          res.status(200).json({
+            CodeResult: STATUS_CODES.INVALID,
+            errorMessage: `El producto ${product} no existe`,
+          });
+        } else if (noStock) {
           res.status(200).json({
             CodeResult: STATUS_CODES.INVALID,
             errorMessage: `No existe Stock disponible para el producto ${product}`,
           });
-          return false;
         }
-      } else {
-        res.status(200).json({
-          CodeResult: STATUS_CODES.INVALID,
-          errorMessage: "No se encontraron productos",
-        });
-        return false;
-      }
-    });
-    if (isProduct) {
-      const newSolicitudProducto = await new Solicitud(req.body).save();
-      res.status(200).json({
-        CodeResult: STATUS_CODES.SUCCESS,
-        solicitudProduct: newSolicitudProducto,
-      });
-    }
+      })
+    })
   } catch (err) {
     res.status(200).json({
       errorMessage: err.message,
