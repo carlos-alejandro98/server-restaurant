@@ -12,6 +12,7 @@ exports.loginAdmin = async (req, res) => {
   try {
     const { email, password } = req.body;
     let user = await User.findOne({ email });
+
     if (!user) {
       return res.json({
         errorMessage: "El usuario no existe.",
@@ -100,10 +101,30 @@ exports.createNewUser = async (req, res) => {
 
 // Actualizar Producto
 exports.updateUser = async (req, res) => {
+  const { name, role, phoneNumber, avatarUrl, password, email, status } = req.body;
+  console.log(req.body);
+
   try {
+
+    const salt = await bcrypt.genSalt(10);
+    let passwordHash = '';
+    if (password) {
+      passwordHash = await bcrypt.hash(password, salt);
+    }
+
+    const newUser = {
+      email: email,
+      name: name,
+      role: role,
+      phoneNumber: phoneNumber,
+      password: passwordHash,
+      avatarUrl: avatarUrl,
+      status: status 
+    }
+
     const updated = await User.findOneAndUpdate(
       { _id: req.params.id },
-      req.body,
+      newUser,
       { new: true }
     ).exec();
     res.status(200).json({
