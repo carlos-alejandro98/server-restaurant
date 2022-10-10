@@ -1,0 +1,45 @@
+{
+    "definition": {
+        "openapi": "3.0.0",
+        "info": {
+            "title": "Dev Counter API",
+            "version": "1.0.0",
+            "description": "Dev Counter Services",
+            "termsOfService": "",
+            "contact": {
+                "name": "Api Support",
+                "url": "https://www.linkedin.com/in/carlos-abarca-calderon-716432148/",
+                "email": "carlos.alejandro1998@icloud.com"
+            },
+            "license": {
+                "name": "MIT",
+                "url": "https://opensource.org/licenses/MIT"
+            }
+        },
+        "servers": [
+            {
+                "url": "http://localhost:8001/api",
+                "description": "Dev Counter API Documentation Local"
+            },
+            {
+                "url": "",
+                "description": "Dev Counter API Documentation PRD"
+            }
+        ],
+        "security": [
+            {
+                "ApiKey": []
+            }
+        ],
+        "components": {
+            "ApiKey": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "authtoken"
+            }
+        }
+    },
+    "apis": [
+        "./routes/*.js"
+    ]
+}
