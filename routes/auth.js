@@ -5,7 +5,16 @@ const router = express.Router();
 const { authCheck, adminCheck } = require("../middlewares/auth");
 
 // middlewares controller
-const { createNewUser, updateUser, currentUser, getAllUsers, loginAdmin, deleteUser } = require("../controllers/auth");
+const {
+  createNewUser,
+  updateUser,
+  currentUser,
+  getAllUsers,
+  loginAdmin,
+  deleteUser,
+  sendEmailWithCodeToChangePassword,
+  updatePassword,
+} = require("../controllers/auth");
 
 // routes - endpoints
 
@@ -46,7 +55,8 @@ router.post("/all-users", getAllUsers);
 router.post("/current-admin", authCheck, adminCheck, currentUser);
 router.delete("/delete-user/:id", deleteUser);
 router.post("/update-user/:id", updateUser);
-
+router.post("/send-email-password", sendEmailWithCodeToChangePassword);
+router.post("/update-password", updatePassword);
 
 module.exports = router;
 

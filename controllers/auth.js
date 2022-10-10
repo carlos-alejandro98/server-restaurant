@@ -1,6 +1,8 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const shortid = require("shortid");
+const nodemailer = require("nodemailer");
 
 const STATUS_CODES = {
   ERROR: "ERROR",
@@ -12,7 +14,6 @@ exports.loginAdmin = async (req, res) => {
   try {
     const { email, password } = req.body;
     let user = await User.findOne({ email });
-
     if (!user) {
       return res.json({
         errorMessage: "El usuario no existe.",
@@ -20,7 +21,6 @@ exports.loginAdmin = async (req, res) => {
       });
     }
     const successPassword = bcrypt.compareSync(password, user.password);
-
     if (!successPassword) {
       return res.json({
         errorMessage: "La contraseña es incorrecta.",
@@ -30,7 +30,7 @@ exports.loginAdmin = async (req, res) => {
     const payload = {
       user: {
         id: user.id,
-        email
+        email,
       },
     };
     jwt.sign(
@@ -60,7 +60,8 @@ exports.loginAdmin = async (req, res) => {
 
 exports.createNewUser = async (req, res) => {
   try {
-    const { name, role, phoneNumber, avatarUrl, password, email, status } = req.body;
+    const { name, role, phoneNumber, avatarUrl, password, email, status } =
+      req.body;
     const userExist = await User.findOne({ email });
 
     if (userExist) {
@@ -70,7 +71,7 @@ exports.createNewUser = async (req, res) => {
       });
     } else {
       const salt = await bcrypt.genSalt(10);
-      let passwordHash = '';
+      let passwordHash = "";
       if (password) {
         passwordHash = await bcrypt.hash(password, salt);
       }
@@ -81,7 +82,7 @@ exports.createNewUser = async (req, res) => {
         phoneNumber: phoneNumber ? phoneNumber : "",
         password: passwordHash,
         avatarUrl: avatarUrl ? avatarUrl : "",
-        status: status ? status : true
+        status: status ? status : true,
       }).save();
       res.status(200).json({
         message: "Usuario creado correctamente",
@@ -98,20 +99,16 @@ exports.createNewUser = async (req, res) => {
   }
 };
 
-
 // Actualizar Producto
 exports.updateUser = async (req, res) => {
-  const { name, role, phoneNumber, avatarUrl, password, email, status } = req.body;
-  console.log(req.body);
-
+  const { name, role, phoneNumber, avatarUrl, password, email, status } =
+    req.body;
   try {
-
     const salt = await bcrypt.genSalt(10);
-    let passwordHash = '';
+    let passwordHash = "";
     if (password) {
       passwordHash = await bcrypt.hash(password, salt);
     }
-
     const newUser = {
       email: email,
       name: name,
@@ -119,9 +116,8 @@ exports.updateUser = async (req, res) => {
       phoneNumber: phoneNumber,
       password: passwordHash,
       avatarUrl: avatarUrl,
-      status: status 
-    }
-
+      status: status,
+    };
     const updated = await User.findOneAndUpdate(
       { _id: req.params.id },
       newUser,
@@ -203,6 +199,93 @@ exports.deleteUser = async (req, res) => {
     console.log(err);
     return res.status(400).json({
       errorMessage: "Error al eliminar el usuario",
+      CodeResult: STATUS_CODES.ERROR,
+    });
+  }
+};
+
+exports.sendEmailWithCodeToChangePassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (email === "") {
+      res.status(200).json({ message: "El correo es obligatorio" });
+      return;
+    }
+    let user = await User.findOne({ email });
+    if (!user) {
+      return res.json({
+        errorMessage: "El usuario no existe.",
+        CodeResult: STATUS_CODES.INVALID,
+      });
+    } else {
+      const code = shortid.generate();
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.USER_GMAIL,
+          pass: process.env.PASSWORD_GMAIL_MAC,
+        },
+      });
+      const mailOptions = {
+        from: process.env.USER_GMAIL,
+        to: email,
+        subject: `Recuperación de contraseña`,
+        text:
+          "Estimado:\nHemos recibido una solicitud para modificar tu contraseña.\nIntroduce el siguiente codigo para restablecer tu contraseña: " +
+          `${code}`,
+      };
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          res.status(200).json({
+            message: "Error al enviar email" + err,
+            CodeResult: STATUS_CODES.INVALID,
+          });
+        } else {
+          res.status(200).json({
+            message: "Correo enviado correctamente",
+            code,
+            email,
+            CodeResult: STATUS_CODES.SUCCESS,
+          });
+        }
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(200).json({
+      message: "Hubo un error al enviar correo.",
+      error,
+      CodeResult: STATUS_CODES.ERROR,
+    });
+  }
+};
+
+exports.updatePassword = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    let user = await User.findOne({ email });
+    if (!user) {
+      return res.json({
+        errorMessage: "El usuario no existe.",
+        CodeResult: STATUS_CODES.INVALID,
+      });
+    } else {
+      const salt = await bcrypt.genSalt(10);
+      const passwordHash = await bcrypt.hash(password, salt);
+      const newUser = {
+        email: email,
+        password: passwordHash,
+      };
+      await User.findOneAndUpdate({ email }, newUser).exec();
+      res.status(200).json({
+        CodeResult: STATUS_CODES.SUCCESS,
+        message: "Contraseña modificada correctamente",
+      });
+    }
+  } catch (error) {
+    console.log(err);
+    return res.status(200).json({
+      errorMessage: "Error al cambiar la contraseña",
       CodeResult: STATUS_CODES.ERROR,
     });
   }
