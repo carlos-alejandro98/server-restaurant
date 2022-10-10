@@ -206,7 +206,7 @@ exports.deleteUser = async (req, res) => {
 
 exports.sendEmailWithCodeToChangePassword = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, systemOS } = req.body;
     if (email === "") {
       res.status(200).json({ message: "El correo es obligatorio" });
       return;
@@ -218,12 +218,28 @@ exports.sendEmailWithCodeToChangePassword = async (req, res) => {
         CodeResult: STATUS_CODES.INVALID,
       });
     } else {
+      let passEnviroment = "";
+      if (systemOS === "MAC") {
+        passEnviroment = process.env.PASSWORD_GMAIL_MAC;
+      } else if (systemOS === "WINDOWS") {
+        passEnviroment = process.env.PASSWORD_GMAIL_WINDOWS;
+      } else if (systemOS === "WINDOWSPHONE") {
+        passEnviroment = process.env.PASSWORD_GMAIL_WINDOWSPHONE;
+      } else if (systemOS === "IPAD") {
+        passEnviroment = process.env.PASSWORD_GMAIL_IPAD;
+      } else if (systemOS === "ANDROID") {
+        passEnviroment = process.env.PASSWORD_GMAIL_ANDROID;
+      } else if (systemOS === "IPHONE") {
+        passEnviroment = process.env.PASSWORD_GMAIL_IPHONE;
+      } else {
+        passEnviroment = "";
+      }
       const code = shortid.generate();
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
           user: process.env.USER_GMAIL,
-          pass: process.env.PASSWORD_GMAIL_MAC,
+          pass: passEnviroment,
         },
       });
       const mailOptions = {
@@ -260,6 +276,7 @@ exports.sendEmailWithCodeToChangePassword = async (req, res) => {
   }
 };
 
+const validateSystemOs = (system) => {};
 exports.updatePassword = async (req, res) => {
   try {
     const { email, password } = req.body;
