@@ -252,10 +252,7 @@ exports.sendEmailWithCodeToChangePassword = async (req, res) => {
       };
       transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
-          res.status(200).json({
-            message: "Error al enviar email" + err,
-            CodeResult: STATUS_CODES.INVALID,
-          });
+          throw new Error();
         } else {
           res.status(200).json({
             message: "Correo enviado correctamente",
@@ -276,7 +273,6 @@ exports.sendEmailWithCodeToChangePassword = async (req, res) => {
   }
 };
 
-const validateSystemOs = (system) => {};
 exports.updatePassword = async (req, res) => {
   try {
     const { email, password } = req.body;
