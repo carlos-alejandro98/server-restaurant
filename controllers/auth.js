@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const shortid = require("shortid");
 const nodemailer = require("nodemailer");
+const smtpTransport = require("nodemailer-smtp-transport");
 
 const STATUS_CODES = {
   ERROR: "ERROR",
@@ -235,13 +236,15 @@ exports.sendEmailWithCodeToChangePassword = async (req, res) => {
         passEnviroment = "";
       }
       const code = shortid.generate();
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.USER_GMAIL,
-          pass: passEnviroment,
-        },
-      });
+      const transporter = nodemailer.createTransport(
+        smtpTransport({
+          service: "gmail",
+          auth: {
+            user: process.env.USER_GMAIL,
+            pass: passEnviroment,
+          },
+        })
+      );
       const mailOptions = {
         from: process.env.USER_GMAIL,
         to: email,
@@ -252,7 +255,11 @@ exports.sendEmailWithCodeToChangePassword = async (req, res) => {
       };
       transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
-          throw new Error();
+          res.status(200).json({
+            message: "Hubo un error al enviar correo.",
+            err,
+            CodeResult: STATUS_CODES.ERROR,
+          });
         } else {
           res.status(200).json({
             message: "Correo enviado correctamente",

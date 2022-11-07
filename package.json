@@ -26,6 +26,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "5.10.2",
     "nodemailer": "^6.8.0",
+    "nodemailer-smtp-transport": "^2.7.4",
     "redis": "3.1.2",
     "shortid": "^2.2.16",
     "slugify": "1.4.5",
